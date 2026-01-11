@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global X - Activate Account</title>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --dark: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+        }
+        body {
+            background-color: var(--dark);
+            background-image: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        h2 { color: var(--gold); margin-bottom: 20px; letter-spacing: 2px; }
+        .price-tag {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .admin-wallet {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            word-break: break-all;
+            font-family: monospace;
+            border: 1px dashed var(--gold);
+            cursor: pointer;
+            position: relative;
+        }
+        .copy-hint { font-size: 10px; color: var(--gold); display: block; margin-top: 5px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #333;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        input:focus { border-color: var(--gold); }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--gold);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        button:hover { background: #b5952f; }
+        .status-box {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 5px;
+        }
+        .timer { font-size: 20px; color: var(--gold); font-weight: bold; margin-top: 10px; }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--gold);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>GLOBAL X ACCESS</h2>
+    <div class="price-tag">ACTIVATION FEE: 5 USDT</div>
+    
+    <p style="font-size: 12px; color: #aaa;">Click address to copy</p>
+    <div class="admin-wallet" onclick="copyAddress()">
+        <span id="adminAddr">0x1234567890ABCDEF1234567890ABCDEF12345678</span>
+        <span class="copy-hint">(TRC20 / BEP20)</span>
+    </div>
+
+    <div id="paymentForm">
+        <input type="text" id="userWallet" placeholder="Enter Your Wallet Address (Sender)">
+        <button onclick="submitPayment()">VERIFY PAYMENT</button>
+    </div>
+
+    <div id="statusSection" class="status-box">
+        <div class="spinner"></div>
+        <p>Waiting for Admin Approval...</p>
+        <div class="timer" id="countdown">10:00</div>
+        <p style="font-size: 11px; color:#aaa;">Do not close this window.</p>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCSy59VcrKlgn6mT8x-iqd1mAWjtLwkmds",
+        authDomain: "alifi-1e15c.firebaseapp.com",
+        databaseURL: "https://alifi-1e15c-default-rtdb.firebaseio.com",
+        projectId: "alifi-1e15c",
+        storageBucket: "alifi-1e15c.firebasestorage.app",
+        messagingSenderId: "928673744418",
+        appId: "1:928673744418:web:47b7aa58c8aa50455c6c7b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.copyAddress = function() {
+        const addr = document.getElementById('adminAddr').innerText;
+        navigator.clipboard.writeText(addr).then(() => {
+            alert("Admin Address Copied!");
+        });
+    }
+
+    window.submitPayment = function() {
+        const userWallet = document.getElementById('userWallet').value.trim();
+        if(userWallet.length < 10) {
+            alert("Please enter a valid wallet address.");
+            return;
+        }
+
+        // Hide Form, Show Status
+        document.getElementById('paymentForm').style.display = 'none';
+        document.getElementById('statusSection').style.display = 'block';
+
+        // Start Timer
+        startTimer(600); // 10 minutes
+
+        // Save to Firebase (Sanitize wallet address for DB path)
+        const sanitizedWallet = userWallet.replace(/[.#$/[\]]/g, '_');
+        const reqRef = ref(db, 'activation_requests/' + sanitizedWallet);
+
+        set(reqRef, {
+            wallet: userWallet,
+            status: 'pending',
+            timestamp: Date.now()
+        });
+
+        // Listen for Admin Approval
+        onValue(reqRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.status === 'approved') {
+                // Admin accepted!
+                localStorage.setItem('verified_wallet', userWallet);
+                localStorage.setItem('access_token', 'GRANTED_BY_ADMIN');
+                alert("Payment Verified! Redirecting to Registration...");
+                window.location.href = "registration.html";
+            }
+        });
+    }
+
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('countdown').textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = 0;
+                document.getElementById('statusSection').innerHTML = "<p style='color:red'>Time expired. Contact Support.</p>";
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
