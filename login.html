@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global X - Login</title>
+    <style>
+        :root { --gold: #D4AF37; --dark: #050505; }
+        body {
+            background-color: var(--dark);
+            background: url('https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2000&auto=format&fit=crop') no-repeat center center/cover;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8);
+        }
+        .login-card {
+            position: relative;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--gold);
+            padding: 40px;
+            border-radius: 10px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+        }
+        .logo { font-size: 28px; color: var(--gold); font-weight: bold; margin-bottom: 30px; letter-spacing: 3px; }
+        input {
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            background: #333; border: none; color: white; border-bottom: 2px solid #555;
+            box-sizing: border-box; transition: 0.3s;
+        }
+        input:focus { border-bottom-color: var(--gold); outline: none; background: #2a2a2a; }
+        
+        button {
+            width: 100%; padding: 15px; background: var(--gold);
+            color: #000; font-weight: 800; border: none; letter-spacing: 1px;
+            cursor: pointer; margin-top: 10px;
+        }
+        button:hover { background: #fff; }
+        
+        .footer { margin-top: 20px; font-size: 12px; color: #888; }
+        .footer a { color: var(--gold); text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<div class="login-card">
+    <div class="logo">GLOBAL X</div>
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">SECURE LOGIN</button>
+    
+    <div class="footer">
+        Don't have an account? <a href="account_active.html">Activate Now</a>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCSy59VcrKlgn6mT8x-iqd1mAWjtLwkmds",
+        authDomain: "alifi-1e15c.firebaseapp.com",
+        databaseURL: "https://alifi-1e15c-default-rtdb.firebaseio.com",
+        projectId: "alifi-1e15c",
+        storageBucket: "alifi-1e15c.firebasestorage.app",
+        messagingSenderId: "928673744418",
+        appId: "1:928673744418:web:47b7aa58c8aa50455c6c7b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Generate or retrieve current device ID
+    let currentDeviceId = localStorage.getItem('device_id');
+    if (!currentDeviceId) {
+        currentDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('device_id', currentDeviceId);
+    }
+
+    // Auto-login check
+    const savedUser = localStorage.getItem('user_session');
+    if(savedUser) {
+        // Optional: Add logic to re-verify token with DB here
+       // alert("Welcome back!");
+       // window.location.href = "home.html"; // Redirect if you have a home page
+    }
+
+    window.login = function() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        const emailKey = email.replace(/[.#$/[\]]/g, '_');
+
+        const userRef = ref(db, 'users/' + emailKey);
+
+        get(userRef).then((snapshot) => {
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                
+                if (userData.password === pass) {
+                    // Password Correct. Check Device Logic.
+                    
+                    if (userData.deviceId && userData.deviceId !== currentDeviceId) {
+                        // Account is active on another device
+                        alert("Access Denied: Account active on another device.");
+                        return;
+                    }
+
+                    // Bind this device to the account
+                    update(userRef, { deviceId: currentDeviceId }).then(() => {
+                        localStorage.setItem('user_session', email);
+                        alert("Login Successful!");
+                        // window.location.href = "home.html"; // Uncomment when home.html exists
+                    });
+
+                } else {
+                    alert("Wrong Password");
+                }
+            } else {
+                alert("User not found or not active.");
+            }
+        }).catch((error) => {
+            console.error(error);
+            alert("Network Error");
+        });
+    }
+</script>
+
+</body>
+</html>
