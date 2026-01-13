@@ -3,77 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global X - Welcome</title>
+    <title>Loading...</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #000; }
-        body {
-            background-color: var(--dark);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            overflow: hidden;
-        }
+        body { margin: 0; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; }
+        
+        /* Premium Background */
+        .bg-blob { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, #7d2ae8, #ff0080); filter: blur(80px); opacity: 0.4; border-radius: 50%; z-index: -1; animation: move 5s infinite alternate; }
+        
+        /* Logo & Loader */
+        h1 { font-size: 2.5rem; color: white; margin: 0; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 20px rgba(125, 42, 232, 0.8); }
+        .subtitle { color: #00d4ff; font-size: 0.9rem; letter-spacing: 5px; margin-bottom: 30px; }
+        
+        .loader-bar { width: 200px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; position: relative; }
+        .loader-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00d4ff, #ff0080); animation: load 3s ease-in-out forwards; box-shadow: 0 0 10px #00d4ff; }
 
-        .logo {
-            font-size: 45px;
-            font-weight: 900;
-            color: var(--gold);
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-            margin-bottom: 40px;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-
-        .loader-ring {
-            width: 60px;
-            height: 60px;
-            border: 4px solid transparent;
-            border-top: 4px solid var(--gold);
-            border-right: 4px solid var(--gold);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-text {
-            color: #fff;
-            margin-top: 20px;
-            font-size: 14px;
-            letter-spacing: 2px;
-            opacity: 0.7;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes glow { from { text-shadow: 0 0 10px #D4AF37; } to { text-shadow: 0 0 30px #D4AF37, 0 0 10px #fff; } }
+        @keyframes move { from { transform: translate(-20px, -20px); } to { transform: translate(20px, 20px); } }
+        @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
     </style>
 </head>
 <body>
-
-    <div class="logo">GLOBAL X</div>
-    <div class="loader-ring"></div>
-    <div class="loading-text" id="status">SYSTEM LOADING...</div>
+    <div class="bg-blob"></div>
+    <h1>NEXUS<span style="color:#00d4ff">PRO</span></h1>
+    <div class="subtitle">PREMIUM EARNING</div>
+    
+    <div class="loader-bar">
+        <div class="loader-fill"></div>
+    </div>
 
     <script>
-        // Loading Simulation Text
-        setTimeout(() => { document.getElementById('status').innerText = "CHECKING SERVER..."; }, 1500);
-        setTimeout(() => { document.getElementById('status').innerText = "VERIFYING SECURITY..."; }, 2500);
-
-        // Redirect Logic after 4 seconds
-        setTimeout(() => {
-            // Check if user is already fully logged in
-            const session = localStorage.getItem('user_session');
-            
-            if (session) {
-                // If logged in, go to Home or Login
-                window.location.href = "login.html"; 
-            } else {
-                // Otherwise, always go to Account Active page first
-                window.location.href = "account_active.html";
-            }
-        }, 4000);
+        // Initialize Default User Data
+        if (!localStorage.getItem("nexusUser")) {
+            const user = {
+                uid: "UID" + Math.floor(100000 + Math.random() * 900000),
+                joinDate: new Date().toLocaleDateString(),
+                balance: 100.00, // Signup Bonus
+                todayProfit: 0.00,
+                teamSize: 2, // Demo Team Size
+                refCode: "NX" + Math.floor(1000 + Math.random() * 9000),
+                vipLevel: "VIP 0",
+                monthlyTarget: 0, // 0 means no target selected
+                weeklyTarget: 0
+            };
+            localStorage.setItem("nexusUser", JSON.stringify(user));
+        }
+        setTimeout(() => window.location.href = "home.html", 3000);
     </script>
 </body>
 </html>
