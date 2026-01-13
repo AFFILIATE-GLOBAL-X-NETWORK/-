@@ -1,288 +1,326 @@
+<!-- registration.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global X - Register</title>
+    <title>Global X - Member Registration</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --gold: #D4AF37; --dark: #0a0a0a; --glass: rgba(255, 255, 255, 0.05); }
+        :root {
+            --primary-gold: #FFD700;
+            --gold-gradient: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+            --dark-bg: #050505;
+            --card-bg: rgba(18, 18, 18, 0.7);
+            --border-color: rgba(255, 215, 0, 0.15);
+            --input-bg: rgba(255, 255, 255, 0.03);
+            --text-muted: #888;
+        }
+
         body {
-            background-color: var(--dark);
-            background-image: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            margin: 0; padding: 0;
+            background-color: var(--dark-bg);
             color: #fff;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Outfit', sans-serif;
             min-height: 100vh;
-            margin: 0;
-            overflow: hidden; /* Prevent scroll when modal is open */
-        }
-        .reg-box {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid var(--gold);
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
             position: relative;
-            z-index: 1;
         }
-        h2 { text-align: center; color: var(--gold); margin-top: 0; letter-spacing: 2px; }
+
+        /* Ambient Background */
+        .bg-glow {
+            position: absolute; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .container { width: 100%; max-width: 450px; padding: 20px; z-index: 10; }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px; padding: 40px 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--gold-gradient);
+        }
+
+        .header-area { text-align: center; margin-bottom: 30px; }
+        .title { font-size: 24px; font-weight: 800; text-transform: uppercase; margin: 0; }
+        .subtitle { font-size: 12px; color: var(--text-muted); letter-spacing: 1px; margin-top: 5px; }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 18px; }
+        .form-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; display: block; margin-left: 4px; }
         
-        .form-group { margin-bottom: 15px; position: relative; }
-        label { display: block; font-size: 12px; color: #ccc; margin-bottom: 5px; }
-        input, select {
-            width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff;
-            border-radius: 4px; box-sizing: border-box; transition: 0.3s;
+        .input-box { position: relative; }
+        .form-input, .form-select {
+            width: 100%; padding: 14px 14px 14px 45px;
+            background: var(--input-bg); border: 1px solid #222;
+            border-radius: 10px; color: #fff; font-family: 'Outfit', sans-serif; font-size: 14px;
+            box-sizing: border-box; transition: 0.3s;
         }
-        input:focus { border-color: var(--gold); outline: none; background: #2a2a2a; }
-        
-        input.valid { border-color: #2ecc71; }
-        input.invalid { border-color: #e74c3c; }
-        .error-msg { color: #e74c3c; font-size: 11px; margin-top: 5px; display: none; }
-
-        .password-wrapper { position: relative; }
-        .toggle-pw {
-            position: absolute; right: 10px; top: 38px; cursor: pointer; color: var(--gold); font-size: 12px;
+        .input-icon {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: #555; font-size: 14px; transition: 0.3s;
         }
 
-        button.main-btn {
-            width: 100%; padding: 12px; background: linear-gradient(45deg, var(--gold), #b5952f);
-            border: none; color: #000; font-weight: bold; cursor: pointer; margin-top: 15px;
-            border-radius: 4px; font-size: 16px; text-transform: uppercase;
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary-gold); outline: none; background: #080808;
         }
-        button.main-btn:hover { background: #fff; }
-        .note { font-size: 11px; color: #777; text-align: center; margin-top: 15px; }
+        .form-input:focus + .input-icon { color: var(--primary-gold); }
 
-        /* --- PREMIUM SUCCESS MODAL CSS --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 999;
-            display: none; /* Hidden by default */
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
+        /* Readonly styling */
+        .form-input[readonly] { background: rgba(0,0,0,0.4); color: #777; border-color: #222; cursor: not-allowed; }
+
+        .btn-gold {
+            width: 100%; padding: 16px; border-radius: 10px; border: none;
+            background: var(--gold-gradient); color: #000; font-weight: 800; font-size: 14px;
+            cursor: pointer; transition: transform 0.2s; margin-top: 15px;
         }
-        .modal-box {
-            background: #111;
-            border: 2px solid var(--gold);
-            padding: 40px;
-            border-radius: 20px;
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2); }
+
+        /* Select styling hack */
+        .form-select { appearance: none; -webkit-appearance: none; cursor: pointer; }
+        .form-select option { background: #111; color: #fff; padding: 10px; }
+
+        /* SUCCESS OVERLAY */
+        #successOverlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5,5,5,0.98); z-index: 50; border-radius: 24px;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
             text-align: center;
-            width: 300px;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.4);
-            animation: popUp 0.5s ease-out forwards;
         }
-        @keyframes popUp {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        .check-circle {
+            font-size: 50px; color: #2ecc71; margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        
-        /* Animated Checkmark */
-        .checkmark-circle {
-            width: 80px; height: 80px; position: relative; display: inline-block;
-            vertical-align: top; margin-bottom: 20px;
-        }
-        .checkmark-circle .background {
-            width: 80px; height: 80px;
-            border-radius: 50%; background: #2ecc71;
-            position: absolute; top: 0; left: 0;
-            animation: pulseGreen 2s infinite;
-        }
-        .checkmark-circle .checkmark {
-            border-radius: 5px;
-        }
-        .checkmark-circle .checkmark.draw:after {
-            animation-delay: 100ms;
-            animation-duration: 1s;
-            animation-timing-function: ease;
-            animation-name: checkmark;
-            transform: scaleX(-1) rotate(135deg);
-            animation-fill-mode: forwards;
-        }
-        .checkmark-circle .checkmark:after {
-            opacity: 1; height: 40px; width: 20px;
-            transform-origin: left top;
-            border-right: 5px solid #fff; border-top: 5px solid #fff;
-            content: ''; left: 20px; top: 40px; position: absolute;
+        .redirect-timer {
+            font-size: 40px; font-weight: 800; color: var(--primary-gold);
+            margin: 15px 0; font-family: monospace;
         }
         
-        @keyframes checkmark {
-            0% { height: 0; width: 0; opacity: 1; }
-            20% { height: 0; width: 20px; opacity: 1; }
-            40% { height: 40px; width: 20px; opacity: 1; }
-            100% { height: 40px; width: 20px; opacity: 1; }
-        }
-        @keyframes pulseGreen {
-            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(46, 204, 113, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
-        }
-
-        .modal-title { color: var(--gold); font-size: 24px; font-weight: bold; margin: 10px 0; }
-        .modal-text { color: #ccc; font-size: 14px; margin-bottom: 25px; }
-        .modal-btn {
-            background: var(--gold); color: #000; border: none; padding: 10px 25px;
-            font-weight: bold; cursor: pointer; border-radius: 50px; font-size: 14px;
-            transition: 0.3s;
-        }
-        .modal-btn:hover { background: #fff; transform: scale(1.05); }
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
     </style>
 </head>
 <body>
 
-<!-- Registration Form -->
-<div class="reg-box">
-    <h2>MEMBER REGISTRATION</h2>
-    
-    <div class="form-group">
-        <label>Country</label>
-        <select id="country">
-            <option value="BD">🇧🇩 Bangladesh</option>
-            <option value="IN">🇮🇳 India</option>
-            <option value="PK">🇵🇰 Pakistan</option>
-            <option value="US">🇺🇸 United States</option>
-            <option value="GB">🇬🇧 United Kingdom</option>
-            <option value="AE">🇦🇪 UAE</option>
-            <option value="SA">🇸🇦 Saudi Arabia</option>
-            <option value="MY">🇲🇾 Malaysia</option>
-        </select>
-    </div>
+    <div class="bg-glow"></div>
 
-    <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="fullname" placeholder="Enter full name">
-    </div>
+    <div class="container">
+        <div class="glass-card">
+            
+            <!-- Success Overlay -->
+            <div id="successOverlay">
+                <i class="fas fa-check-circle check-circle"></i>
+                <h2 style="margin:0; text-transform:uppercase;">Registration Successful!</h2>
+                <p style="color:#888; font-size:12px; margin-top:5px;">Redirecting to Login...</p>
+                
+                <div class="redirect-timer" id="countdown">15</div>
+                <div style="font-size:10px; color:#555;">SECONDS REMAINING</div>
+            </div>
 
-    <div class="form-group">
-        <label>Gmail Address</label>
-        <input type="email" id="email" placeholder="example@gmail.com" onkeyup="validateEmailRealtime()">
-        <div id="emailError" class="error-msg">Invalid Email format or not a Gmail address</div>
-    </div>
+            <!-- Form Header -->
+            <div class="header-area">
+                <h1 class="title">Create Account</h1>
+                <div class="subtitle">Enter your details to finalize registration</div>
+            </div>
 
-    <div class="form-group password-wrapper">
-        <label>Password</label>
-        <input type="password" id="password" placeholder="Create Password">
-        <span class="toggle-pw" onclick="togglePw('password')">Show</span>
-    </div>
+            <form id="regForm">
+                <!-- Auto-Filled Name -->
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <div class="input-box">
+                        <input type="text" id="regName" class="form-input" readonly placeholder="Loading name...">
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                </div>
 
-    <div class="form-group password-wrapper">
-        <label>Confirm Password</label>
-        <input type="password" id="cPassword" placeholder="Confirm Password">
-        <span class="toggle-pw" onclick="togglePw('cPassword')">Show</span>
-    </div>
+                <!-- Auto-Filled Email -->
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-box">
+                        <input type="email" id="regEmail" class="form-input" readonly placeholder="Loading email...">
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                </div>
 
-    <button class="main-btn" onclick="registerUser()">COMPLETE REGISTRATION</button>
-    <div class="note">System will auto-detect fake email formats.</div>
-</div>
+                <!-- Country Select -->
+                <div class="form-group">
+                    <label class="form-label">Country</label>
+                    <div class="input-box">
+                        <select id="regCountry" class="form-select" required>
+                            <option value="" disabled selected>Select your country</option>
+                            <option value="Bangladesh">Bangladesh</option>
+                            <option value="India">India</option>
+                            <option value="Pakistan">Pakistan</option>
+                            <option value="USA">United States</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="UAE">UAE</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <i class="fas fa-globe input-icon"></i>
+                        <i class="fas fa-chevron-down" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); font-size:10px; color:#666;"></i>
+                    </div>
+                </div>
 
-<!-- PREMIUM SUCCESS POPUP MODAL -->
-<div class="modal-overlay" id="successModal">
-    <div class="modal-box">
-        <div class="checkmark-circle">
-            <div class="background"></div>
-            <div class="checkmark draw"></div>
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-box">
+                        <input type="password" id="regPass" class="form-input" placeholder="Create a password" required minlength="6">
+                        <i class="fas fa-lock input-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="input-box">
+                        <input type="password" id="regConfirmPass" class="form-input" placeholder="Re-enter password" required>
+                        <i class="fas fa-shield-alt input-icon"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-gold" id="submitBtn">CREATE ACCOUNT</button>
+            </form>
+
+            <div style="text-align:center; margin-top:20px; font-size:12px; color:#666;">
+                Already have an account? <a href="login.html" style="color:var(--primary-gold); text-decoration:none;">Login</a>
+            </div>
+
         </div>
-        <div class="modal-title">SUCCESS!</div>
-        <div class="modal-text">Account Created Successfully.<br>Welcome to Global X.</div>
-        <button class="modal-btn" onclick="goToLogin()">PROCEED TO LOGIN</button>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    <!-- Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getDatabase, ref, set, get, query, orderByChild, equalTo, push } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCSy59VcrKlgn6mT8x-iqd1mAWjtLwkmds",
-        authDomain: "alifi-1e15c.firebaseapp.com",
-        databaseURL: "https://alifi-1e15c-default-rtdb.firebaseio.com",
-        projectId: "alifi-1e15c",
-        storageBucket: "alifi-1e15c.firebasestorage.app",
-        messagingSenderId: "928673744418",
-        appId: "1:928673744418:web:47b7aa58c8aa50455c6c7b"
-    };
+        // Same Config as previous files
+        const firebaseConfig = {
+            apiKey: "AIzaSyAPVw167yqxWRl6tckwTJ0w7nQgaHzoijk",
+            authDomain: "affiliate-global-x-network.firebaseapp.com",
+            databaseURL: "https://affiliate-global-x-network-default-rtdb.firebaseio.com",
+            projectId: "affiliate-global-x-network",
+            storageBucket: "affiliate-global-x-network.firebasestorage.app",
+            messagingSenderId: "977862606652",
+            appId: "1:977862606652:web:e7b9f58c9210da04972839"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    if(!localStorage.getItem('access_token')) {
-        alert("Account Activation Required First!");
-        window.location.href = "account_active.html";
-    }
-
-    window.togglePw = function(id) {
-        const x = document.getElementById(id);
-        x.type = x.type === "password" ? "text" : "password";
-    }
-
-    window.validateEmailRealtime = function() {
-        const email = document.getElementById('email').value;
-        const emailBox = document.getElementById('email');
-        const errorMsg = document.getElementById('emailError');
-        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-
-        if (gmailRegex.test(email)) {
-            emailBox.classList.remove('invalid');
-            emailBox.classList.add('valid');
-            errorMsg.style.display = 'none';
-            return true;
-        } else {
-            emailBox.classList.remove('valid');
-            emailBox.classList.add('invalid');
-            errorMsg.style.display = 'block';
-            return false;
-        }
-    }
-
-    window.goToLogin = function() {
-        window.location.href = "login.html";
-    }
-
-    window.registerUser = async function() {
-        const country = document.getElementById('country').value;
-        const fullname = document.getElementById('fullname').value.trim();
-        const email = document.getElementById('email').value.trim().toLowerCase();
-        const pass = document.getElementById('password').value;
-        const cPass = document.getElementById('cPassword').value;
-
-        if(!fullname || !email || !pass) { alert("Please fill all fields properly."); return; }
-        if(!window.validateEmailRealtime()) { alert("Please enter a valid @gmail.com address."); return; }
-        if(pass.length < 6) { alert("Password must be at least 6 characters."); return; }
-        if(pass !== cPass) { alert("Passwords do not match."); return; }
-
-        const emailKey = email.replace(/[.#$/[\]]/g, '_');
-        const dbRef = ref(db);
-
-        get(child(dbRef, `users/${emailKey}`)).then((snapshot) => {
-            if (snapshot.exists()) {
-                alert("❌ This Gmail is already registered!");
-            } else {
-                set(ref(db, 'users/' + emailKey), {
-                    fullname: fullname,
-                    country: country,
-                    email: email,
-                    password: pass,
-                    deviceId: null,
-                    active: true,
-                    joined: Date.now()
-                }).then(() => {
-                    // Registration Success - Show Premium Modal
-                    localStorage.removeItem('access_token');
-                    document.getElementById('successModal').style.display = 'flex';
-                }).catch((err) => {
-                    alert("Network Error: " + err.message);
+        // --- 1. Load Data on Page Start ---
+        window.onload = function() {
+            // Retrieve email saved in localStorage during activation phase
+            const savedEmail = localStorage.getItem('user_email_lock'); // Previously saved in account_active.html
+            
+            if (savedEmail) {
+                document.getElementById('regEmail').value = savedEmail;
+                
+                // Fetch the name from the activation request using the email
+                const activationRef = query(ref(db, 'activation_requests'), orderByChild('email'), equalTo(savedEmail));
+                
+                get(activationRef).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        // Get the latest request key
+                        const keys = Object.keys(data);
+                        const latestReq = data[keys[keys.length - 1]];
+                        
+                        // Auto-Fill Name
+                        document.getElementById('regName').value = latestReq.userName;
+                    } else {
+                        // Fallback if data not found (rare)
+                        document.getElementById('regName').readOnly = false;
+                        document.getElementById('regName').placeholder = "Enter Full Name";
+                    }
+                }).catch((error) => {
+                    console.error("Error fetching name:", error);
                 });
+            } else {
+                // If accessed directly without activation flow
+                alert("Please activate your account first.");
+                window.location.href = 'account_active.html';
             }
-        });
-    }
-</script>
+        };
 
+        // --- 2. Handle Registration Submit ---
+        document.getElementById('regForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const country = document.getElementById('regCountry').value;
+            const pass = document.getElementById('regPass').value;
+            const confirmPass = document.getElementById('regConfirmPass').value;
+            const btn = document.getElementById('submitBtn');
+
+            // Password Validation
+            if (pass !== confirmPass) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREATING...';
+            btn.disabled = true;
+
+            // Save User to Firebase 'users' node
+            // Note: We use a safe key for email by replacing '.' with ','
+            const safeEmailKey = email.replace(/\./g, ',');
+            
+            set(ref(db, 'users/' + safeEmailKey), {
+                fullName: name,
+                email: email,
+                country: country,
+                password: pass, // In a real app, never store plain text passwords!
+                joinDate: Date.now(),
+                isVerified: true
+            })
+            .then(() => {
+                // Remove the temp lock from activation phase
+                localStorage.removeItem('user_email_lock'); 
+                
+                // Show Success Overlay & Start Timer
+                document.getElementById('successOverlay').style.display = 'flex';
+                startRedirectTimer();
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+                btn.disabled = false;
+                btn.innerText = "CREATE ACCOUNT";
+            });
+        });
+
+        // --- 3. Timer Logic ---
+        function startRedirectTimer() {
+            let timeLeft = 15;
+            const timerEl = document.getElementById('countdown');
+            
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    window.location.href = 'login.html'; // Redirect to Login
+                }
+            }, 1000);
+        }
+
+    </script>
 </body>
 </html>
