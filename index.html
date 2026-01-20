@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Digital Store</title>
-    <!-- Google Fonts -->
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -15,7 +14,7 @@
             --card-bg: #121212;
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
-            --accent: #00f2ff; /* Cyan Neon */
+            --accent: #00f2ff; /* Neon Cyan */
             --accent-glow: rgba(0, 242, 255, 0.4);
             --gradient: linear-gradient(135deg, #00f2ff 0%, #0066ff 100%);
         }
@@ -30,122 +29,86 @@
 
         /* Navbar */
         nav {
-            background: rgba(18, 18, 18, 0.8);
-            backdrop-filter: blur(15px);
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
             z-index: 100;
             border-bottom: 1px solid #333;
-            padding: 20px 0;
+            padding: 18px 0;
         }
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            text-align: center;
         }
         .logo {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 800;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
             letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            cursor: pointer;
         }
 
-        /* Container */
+        /* Hero / Header */
         .container {
             max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
         }
-
-        /* Header Text */
         .header-section {
             text-align: center;
-            margin-bottom: 60px;
-            animation: fadeInDown 1s ease;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
         }
-        .header-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .header-section p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
+        .header-section h2 { font-size: 2.2rem; margin-bottom: 8px; }
+        .header-section p { color: var(--text-muted); font-size: 1.1rem; }
 
-        /* Grid System */
+        /* Grid */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 25px;
         }
 
-        /* Card Design */
+        /* Card Style */
         .card {
             background: var(--card-bg);
-            border: 1px solid #333;
+            border: 1px solid #2a2a2a;
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
             animation: fadeIn 0.8s ease-in-out;
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-8px);
             border-color: var(--accent);
-            box-shadow: 0 0 30px var(--accent-glow);
+            box-shadow: 0 10px 30px -10px rgba(0, 242, 255, 0.2);
         }
 
-        /* Images */
+        /* Image Area */
         .img-area {
             height: 200px;
             overflow: hidden;
+            cursor: pointer;
             position: relative;
-            background: #000;
         }
         .main-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: 0.5s;
+            transition: transform 0.5s ease;
         }
-        .card:hover .main-img {
-            transform: scale(1.1);
-        }
+        .card:hover .main-img { transform: scale(1.08); }
 
-        .thumbs {
-            display: flex;
-            gap: 5px;
-            padding: 10px;
-            background: #0a0a0a;
-            border-bottom: 1px solid #222;
-        }
-        .thumb {
-            width: 100%;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 4px;
-            cursor: pointer;
-            opacity: 0.6;
-            transition: 0.3s;
-            border: 1px solid transparent;
-        }
-        .thumb:hover {
-            opacity: 1;
-            border-color: var(--accent);
-        }
-
-        /* Content */
+        /* Card Body */
         .card-body {
             padding: 20px;
             flex-grow: 1;
@@ -154,26 +117,28 @@
         }
 
         .category-badge {
-            background: rgba(0, 242, 255, 0.1);
+            background: rgba(0, 242, 255, 0.08);
             color: var(--accent);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
             display: inline-block;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             border: 1px solid rgba(0, 242, 255, 0.2);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .title {
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             font-weight: 700;
             margin: 0 0 10px 0;
             line-height: 1.4;
             color: #fff;
+            cursor: pointer;
+            transition: color 0.3s;
         }
+        .title:hover { color: var(--accent); }
 
         .price-section {
             display: flex;
@@ -182,10 +147,9 @@
             margin-bottom: 15px;
         }
         .final-price {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
         .old-price {
             text-decoration: line-through;
@@ -209,63 +173,52 @@
             color: #ccc;
         }
         .info-list li {
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .info-list i { color: var(--accent); width: 20px; text-align: center; }
 
-        /* Button */
-        .buy-btn {
+        /* Buttons Group */
+        .btn-group {
             margin-top: auto;
-            background: var(--gradient);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
-        .buy-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: 0.5s;
-        }
-        .buy-btn:hover::before {
-            left: 100%;
-        }
-        .buy-btn:hover {
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translateY(-2px);
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.3s;
+            text-decoration: none;
         }
 
-        /* Animations */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn-details {
+            background: #1f1f1f;
+            color: white;
+            border: 1px solid #333;
         }
+        .btn-details:hover { background: #333; }
+
+        .btn-buy {
+            background: var(--gradient);
+            color: white;
+        }
+        .btn-buy:hover { box-shadow: 0 0 15px var(--accent-glow); }
+
+        /* Animations & Loader */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* Loader */
         .loader {
             grid-column: 1 / -1;
             text-align: center;
@@ -304,8 +257,7 @@
 
 <script>
     // ============ SETTINGS ============
-    // যদি কোনো প্রোডাক্টে টেলিগ্রাম আইডি না থাকে, তবে এই আইডি ব্যবহার হবে
-    const DEFAULT_TELEGRAM_USER = "YOUR_TELEGRAM_USERNAME"; // আপনার মেইন আইডি এখানে দিন
+    const DEFAULT_TELEGRAM_USER = "YOUR_TELEGRAM_USERNAME"; // আপনার টেলিগ্রাম ইউজারনেম দিন (@ ছাড়া)
     // ==================================
 
     const firebaseConfig = {
@@ -318,18 +270,16 @@
         appId: "1:887907470692:web:c4142ac9573e19d29d3e71"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const productList = document.getElementById('products');
 
-    // Fetch Data from Database
     db.ref('websites').on('value', (snapshot) => {
-        productList.innerHTML = ''; // Clear existing list
+        productList.innerHTML = '';
         const data = snapshot.val();
 
         if(!data) {
-            productList.innerHTML = '<div style="text-align:center; width:100%; color:#666; font-size:1.2rem;">No websites available at the moment.</div>';
+            productList.innerHTML = '<div style="text-align:center; width:100%; color:#666; font-size:1.2rem;">No items found.</div>';
             return;
         }
 
@@ -337,95 +287,78 @@
         Object.keys(data).reverse().forEach(key => {
             const item = data[key];
 
-            // 🛑 CHECK: যদি Status 'unpublished' হয়, তবে কাস্টমারকে দেখাবো না
+            // 🛑 Unpublished Check
             if (item.status === 'unpublished') return;
 
-            // 🟢 SET TELEGRAM ID: ডাটাবেস থেকে আইডি নিবে, না থাকলে ডিফল্ট
+            // Telegram User Logic
             const productTelegramUser = item.telegramId || DEFAULT_TELEGRAM_USER;
 
-            // Price Calculation
+            // Price Logic
             const price = parseFloat(item.price);
             const discount = parseFloat(item.discount || 0);
             const finalPrice = Math.floor(price - (price * (discount/100)));
 
-            // Image Thumbnails Logic
-            let thumbsHtml = '';
-            if(item.images && Array.isArray(item.images)){
-                item.images.forEach(img => {
-                    if(img && img.trim() !== "") {
-                        thumbsHtml += `<img src="${img}" class="thumb" onclick="changeImage(this, '${key}')">`;
-                    }
-                });
-            }
+            // Image Check
+            const mainImg = (item.images && item.images[0]) ? item.images[0] : 'https://via.placeholder.com/400x300?text=No+Image';
 
-            // HTML Template Construction
             const html = `
                 <div class="card">
-                    <div class="img-area">
-                        <img src="${item.images[0]}" class="main-img" id="main-${key}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-                    </div>
-                    <div class="thumbs">
-                        ${thumbsHtml}
+                    <!-- Image Click -> Product Page -->
+                    <div class="img-area" onclick="viewProduct('${key}')">
+                        <img src="${mainImg}" class="main-img" alt="${item.title}">
                     </div>
                     
                     <div class="card-body">
                         <div>
                             <span class="category-badge">${item.category}</span>
-                            <h3 class="title">${item.title}</h3>
+                            <!-- Title Click -> Product Page -->
+                            <h3 class="title" onclick="viewProduct('${key}')">${item.title}</h3>
+                            
                             <div class="price-section">
                                 <span class="final-price">৳${finalPrice}</span>
-                                ${discount > 0 ? `<span class="old-price">৳${price}</span> <span class="discount-badge">-${discount}% OFF</span>` : ''}
+                                ${discount > 0 ? `<span class="old-price">৳${price}</span> <span class="discount-badge">-${discount}%</span>` : ''}
                             </div>
                         </div>
 
                         <ul class="info-list">
-                            <li><i class="fas fa-clock"></i> Delivery: <b>${item.delivery}</b></li>
-                            <li><i class="fas fa-wallet"></i> Down Payment: <b>৳${item.downPayment}</b></li>
-                            <li><i class="fas fa-info-circle"></i> ${item.desc.substring(0, 60)}${item.desc.length > 60 ? '...' : ''}</li>
+                            <li><i class="fas fa-clock" style="color:var(--accent)"></i> Delivery: <b>${item.delivery}</b></li>
+                            <li><i class="fas fa-check-circle" style="color:var(--accent)"></i> Ready to Setup</li>
                         </ul>
 
-                        <button class="buy-btn" onclick="openTelegram('${item.title}', ${finalPrice}, ${item.downPayment}, '${productTelegramUser}')">
-                            <i class="fab fa-telegram-plane"></i> Buy Now
-                        </button>
+                        <div class="btn-group">
+                            <button class="btn btn-details" onclick="viewProduct('${key}')">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                            <button class="btn btn-buy" onclick="directBuy('${item.title}', ${finalPrice}, ${item.downPayment}, '${productTelegramUser}')">
+                                <i class="fab fa-telegram-plane"></i> Buy
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
             productList.innerHTML += html;
         });
 
-        // If all items were unpublished
         if(productList.innerHTML === '') {
-            productList.innerHTML = '<div style="text-align:center; width:100%; color:#666; font-size:1.2rem;">Coming Soon...</div>';
+            productList.innerHTML = '<div style="text-align:center; width:100%; color:#666; padding:50px;">No published websites.</div>';
         }
     });
 
-    // Function to change main image on thumbnail click
-    window.changeImage = function(elm, id) {
-        const mainImg = document.getElementById(`main-${id}`);
-        mainImg.style.opacity = '0.5'; // Fade effect
-        setTimeout(() => {
-            mainImg.src = elm.src;
-            mainImg.style.opacity = '1';
-        }, 200);
-
-        // Highlight active thumb
-        elm.parentElement.querySelectorAll('.thumb').forEach(t => t.style.borderColor = 'transparent');
-        elm.style.borderColor = '#00f2ff';
+    // 🔗 Go to Product Page Function
+    window.viewProduct = function(id) {
+        window.location.href = `product.html?id=${id}`;
     }
 
-    // Function to handle Telegram Buy
-    window.openTelegram = function(title, price, advance, tgUser) {
-        const msg = `Hello! I am interested in buying this website:%0A%0A` +
-                    `🖥️ *Website Name:* ${title}%0A` +
-                    `💰 *Final Price:* ${price} Tk%0A` +
+    // ✈️ Direct Telegram Buy Function
+    window.directBuy = function(title, price, advance, tgUser) {
+        const msg = `Hello! I want to buy:%0A%0A` +
+                    `🌐 *${title}*%0A` +
+                    `💰 *Price:* ${price} Tk%0A` +
                     `💳 *Down Payment:* ${advance} Tk%0A%0A` +
-                    `Please send me payment details via Bkash/Nagad.`;
+                    `Please send payment details.`;
         
-        // Remove @ if user accidentally added it in admin panel
         const cleanUser = tgUser.replace('@', '');
-        
-        const url = `https://t.me/${cleanUser}?text=${msg}`;
-        window.open(url, '_blank');
+        window.open(`https://t.me/${cleanUser}?text=${msg}`, '_blank');
     }
 </script>
 
