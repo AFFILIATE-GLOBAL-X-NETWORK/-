@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --card-bg: #121212;
+            --text-main: #ffffff;
+            --accent: #00f2ff; 
+            --gradient: linear-gradient(135deg, #00f2ff 0%, #0066ff 100%);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding-bottom: 80px; /* Space for fixed button */
+        }
+
+        /* Navbar */
+        nav {
+            background: rgba(18, 18, 18, 0.9);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .back-btn { color: white; font-size: 20px; text-decoration: none; }
+        .nav-title { font-size: 18px; font-weight: 600; }
+
+        /* Image Section */
+        .image-container {
+            width: 100%;
+            background: #000;
+            position: relative;
+        }
+        .main-img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain; /* Full Image Show inside box */
+            display: block;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            overflow-x: auto;
+            background: #111;
+        }
+        .thumb {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid transparent;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .thumb.active { border-color: var(--accent); opacity: 1; }
+
+        /* Content */
+        .details-container { padding: 20px; }
+        
+        .category {
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        h1 { margin: 10px 0; font-size: 26px; line-height: 1.3; }
+        
+        .price-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        .final-price { font-size: 28px; font-weight: 700; color: #fff; }
+        .old-price { text-decoration: line-through; color: #777; }
+        .discount { background: #ff0055; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+
+        .meta-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #ccc;
+        }
+        .meta-info div { display: flex; align-items: center; gap: 8px; }
+
+        /* Description */
+        .desc-box {
+            background: #121212;
+            padding: 20px;
+            border-radius: 12px;
+            line-height: 1.6;
+            color: #ddd;
+            font-size: 15px;
+            white-space: pre-wrap; /* Keeps lines as written in admin */
+        }
+        .desc-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; color: white; border-bottom: 1px solid #333; padding-bottom: 5px; }
+
+        /* Sticky Footer Button */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1a1a1a;
+            padding: 15px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .down-payment {
+            font-size: 14px;
+            color: #ccc;
+        }
+        .dp-amount { display: block; font-size: 18px; font-weight: 700; color: var(--accent); }
+
+        .buy-now-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+            text-transform: uppercase;
+        }
+
+        /* Loading */
+        #loader { text-align: center; margin-top: 50px; font-size: 20px; color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <span class="nav-title">Website Details</span>
+</nav>
+
+<div id="loader"><i class="fas fa-spinner fa-spin"></i> Loading Details...</div>
+
+<div id="content" style="display:none;">
+    <!-- Main Image -->
+    <div class="image-container">
+        <img id="mainImg" class="main-img" src="" alt="Product Image">
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery" id="gallery"></div>
+
+    <!-- Info -->
+    <div class="details-container">
+        <div class="category" id="cat"></div>
+        <h1 id="title"></h1>
+        
+        <div class="price-box">
+            <span class="final-price" id="price"></span>
+            <span class="old-price" id="oldPrice"></span>
+            <span class="discount" id="discountBadge"></span>
+        </div>
+
+        <div class="meta-info">
+            <div><i class="fas fa-clock" style="color:var(--accent)"></i> <span id="delivery"></span></div>
+            <div><i class="fas fa-check-circle" style="color:var(--accent)"></i> Instant Setup</div>
+        </div>
+
+        <div class="desc-box">
+            <div class="desc-title">Description & Features</div>
+            <div id="desc"></div>
+        </div>
+    </div>
+
+    <!-- Fixed Bottom Bar -->
+    <div class="bottom-bar">
+        <div class="down-payment">
+            Down Payment:
+            <span class="dp-amount" id="downPay"></span>
+        </div>
+        <button class="buy-now-btn" id="buyBtn">
+            Buy Now <i class="fab fa-telegram-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+    // ============ SETTINGS ============
+    const DEFAULT_TELEGRAM = "YOUR_TELEGRAM_USERNAME"; // আগের মতোই আপনার ইউজারনেম দিন
+    // ==================================
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB2YLhAvSF12ZZx7LSnbqcCjtS2_8QLt4o",
+        authDomain: "task-f6078.firebaseapp.com",
+        databaseURL: "https://task-f6078-default-rtdb.firebaseio.com",
+        projectId: "task-f6078",
+        storageBucket: "task-f6078.firebasestorage.app",
+        messagingSenderId: "887907470692",
+        appId: "1:887907470692:web:c4142ac9573e19d29d3e71"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Get ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    if(!productId) {
+        window.location.href = 'index.html';
+    }
+
+    // Fetch Specific Product Data
+    db.ref('websites/' + productId).once('value').then((snapshot) => {
+        const item = snapshot.val();
+        
+        if(item) {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+
+            // Populate Data
+            document.getElementById('mainImg').src = item.images[0];
+            document.getElementById('cat').innerText = item.category;
+            document.getElementById('title').innerText = item.title;
+            document.getElementById('delivery').innerText = item.delivery;
+            document.getElementById('desc').innerText = item.desc; // Full text with line breaks
+            document.getElementById('downPay').innerText = '৳' + item.downPayment;
+
+            // Price Logic
+            const price = parseFloat(item.price);
+            const discount = parseFloat(item.discount || 0);
+            const finalPrice = Math.floor(price - (price * (discount/100)));
+
+            document.getElementById('price').innerText = '৳' + finalPrice;
+            if(discount > 0) {
+                document.getElementById('oldPrice').innerText = '৳' + price;
+                document.getElementById('discountBadge').innerText = '-' + discount + '%';
+            } else {
+                document.getElementById('oldPrice').style.display = 'none';
+                document.getElementById('discountBadge').style.display = 'none';
+            }
+
+            // Gallery Logic
+            const gallery = document.getElementById('gallery');
+            item.images.forEach((img, index) => {
+                if(img) {
+                    const thumb = document.createElement('img');
+                    thumb.src = img;
+                    thumb.className = index === 0 ? 'thumb active' : 'thumb';
+                    thumb.onclick = function() {
+                        document.getElementById('mainImg').src = img;
+                        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                        thumb.classList.add('active');
+                    };
+                    gallery.appendChild(thumb);
+                }
+            });
+
+            // Buy Button Logic
+            const tgUser = item.telegramId || DEFAULT_TELEGRAM;
+            document.getElementById('buyBtn').onclick = function() {
+                const msg = `Hello! I want to buy:%0A%0A` +
+                            `🌐 *${item.title}*%0A` +
+                            `💰 *Price:* ${finalPrice} Tk%0A` +
+                            `💳 *DP:* ${item.downPayment} Tk%0A%0A` +
+                            `Please send details.`;
+                window.open(`https://t.me/${tgUser}?text=${msg}`, '_blank');
+            };
+
+        } else {
+            alert('Product not found!');
+            window.location.href = 'index.html';
+        }
+    });
+</script>
+
+</body>
+</html>
