@@ -3,50 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading...</title>
+    <title>Premium Digital Store</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { margin: 0; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Poppins', sans-serif; overflow: hidden; }
-        
-        /* Premium Background */
-        .bg-blob { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, #7d2ae8, #ff0080); filter: blur(80px); opacity: 0.4; border-radius: 50%; z-index: -1; animation: move 5s infinite alternate; }
-        
-        /* Logo & Loader */
-        h1 { font-size: 2.5rem; color: white; margin: 0; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 20px rgba(125, 42, 232, 0.8); }
-        .subtitle { color: #00d4ff; font-size: 0.9rem; letter-spacing: 5px; margin-bottom: 30px; }
-        
-        .loader-bar { width: 200px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; position: relative; }
-        .loader-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #00d4ff, #ff0080); animation: load 3s ease-in-out forwards; box-shadow: 0 0 10px #00d4ff; }
+        :root {
+            --bg-dark: #050505;
+            --card-bg: #121212;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent: #00f2ff; /* Cyan Neon */
+            --accent-glow: rgba(0, 242, 255, 0.4);
+            --gradient: linear-gradient(135deg, #00f2ff 0%, #0066ff 100%);
+        }
 
-        @keyframes move { from { transform: translate(-20px, -20px); } to { transform: translate(20px, 20px); } }
-        @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        /* Navbar */
+        nav {
+            background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+            padding: 20px 0;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Header Text */
+        .header-section {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease;
+        }
+        .header-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .header-section p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Grid System */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Card Design */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+
+        /* Images */
+        .img-area {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+        .main-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+        .card:hover .main-img {
+            transform: scale(1.1);
+        }
+
+        .thumbs {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            background: #0a0a0a;
+            border-bottom: 1px solid #222;
+        }
+        .thumb {
+            width: 100%;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+        .thumb:hover {
+            opacity: 1;
+            border-color: var(--accent);
+        }
+
+        /* Content */
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-badge {
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+            color: #fff;
+        }
+
+        .price-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .final-price {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .discount-badge {
+            background: #ff0055;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .info-list {
+            margin: 0 0 20px 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .info-list li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-list i { color: var(--accent); width: 20px; text-align: center; }
+
+        /* Button */
+        .buy-btn {
+            margin-top: auto;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .buy-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+        .buy-btn:hover::before {
+            left: 100%;
+        }
+        .buy-btn:hover {
+            box-shadow: 0 0 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Loader */
+        .loader {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
-    <div class="bg-blob"></div>
-    <h1>NEXUS<span style="color:#00d4ff">PRO</span></h1>
-    <div class="subtitle">PREMIUM EARNING</div>
-    
-    <div class="loader-bar">
-        <div class="loader-fill"></div>
+
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-code"></i> Web Market
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="header-section">
+        <h2>Premium Ready-Made Websites</h2>
+        <p>High quality designs available for instant purchase</p>
     </div>
 
-    <script>
-        // Initialize Default User Data
-        if (!localStorage.getItem("nexusUser")) {
-            const user = {
-                uid: "UID" + Math.floor(100000 + Math.random() * 900000),
-                joinDate: new Date().toLocaleDateString(),
-                balance: 100.00, // Signup Bonus
-                todayProfit: 0.00,
-                teamSize: 2, // Demo Team Size
-                refCode: "NX" + Math.floor(1000 + Math.random() * 9000),
-                vipLevel: "VIP 0",
-                monthlyTarget: 0, // 0 means no target selected
-                weeklyTarget: 0
-            };
-            localStorage.setItem("nexusUser", JSON.stringify(user));
+    <div id="products" class="product-grid">
+        <div class="loader">
+            <i class="fas fa-circle-notch fa-spin"></i> Loading Products...
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+    // ============ SETTINGS ============
+    // যদি কোনো প্রোডাক্টে টেলিগ্রাম আইডি না থাকে, তবে এই আইডি ব্যবহার হবে
+    const DEFAULT_TELEGRAM_USER = "YOUR_TELEGRAM_USERNAME"; // আপনার মেইন আইডি এখানে দিন
+    // ==================================
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyB2YLhAvSF12ZZx7LSnbqcCjtS2_8QLt4o",
+        authDomain: "task-f6078.firebaseapp.com",
+        databaseURL: "https://task-f6078-default-rtdb.firebaseio.com",
+        projectId: "task-f6078",
+        storageBucket: "task-f6078.firebasestorage.app",
+        messagingSenderId: "887907470692",
+        appId: "1:887907470692:web:c4142ac9573e19d29d3e71"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const productList = document.getElementById('products');
+
+    // Fetch Data from Database
+    db.ref('websites').on('value', (snapshot) => {
+        productList.innerHTML = ''; // Clear existing list
+        const data = snapshot.val();
+
+        if(!data) {
+            productList.innerHTML = '<div style="text-align:center; width:100%; color:#666; font-size:1.2rem;">No websites available at the moment.</div>';
+            return;
         }
-        setTimeout(() => window.location.href = "home.html", 3000);
-    </script>
+
+        // Convert object to array and reverse (Newest First)
+        Object.keys(data).reverse().forEach(key => {
+            const item = data[key];
+
+            // 🛑 CHECK: যদি Status 'unpublished' হয়, তবে কাস্টমারকে দেখাবো না
+            if (item.status === 'unpublished') return;
+
+            // 🟢 SET TELEGRAM ID: ডাটাবেস থেকে আইডি নিবে, না থাকলে ডিফল্ট
+            const productTelegramUser = item.telegramId || DEFAULT_TELEGRAM_USER;
+
+            // Price Calculation
+            const price = parseFloat(item.price);
+            const discount = parseFloat(item.discount || 0);
+            const finalPrice = Math.floor(price - (price * (discount/100)));
+
+            // Image Thumbnails Logic
+            let thumbsHtml = '';
+            if(item.images && Array.isArray(item.images)){
+                item.images.forEach(img => {
+                    if(img && img.trim() !== "") {
+                        thumbsHtml += `<img src="${img}" class="thumb" onclick="changeImage(this, '${key}')">`;
+                    }
+                });
+            }
+
+            // HTML Template Construction
+            const html = `
+                <div class="card">
+                    <div class="img-area">
+                        <img src="${item.images[0]}" class="main-img" id="main-${key}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                    </div>
+                    <div class="thumbs">
+                        ${thumbsHtml}
+                    </div>
+                    
+                    <div class="card-body">
+                        <div>
+                            <span class="category-badge">${item.category}</span>
+                            <h3 class="title">${item.title}</h3>
+                            <div class="price-section">
+                                <span class="final-price">৳${finalPrice}</span>
+                                ${discount > 0 ? `<span class="old-price">৳${price}</span> <span class="discount-badge">-${discount}% OFF</span>` : ''}
+                            </div>
+                        </div>
+
+                        <ul class="info-list">
+                            <li><i class="fas fa-clock"></i> Delivery: <b>${item.delivery}</b></li>
+                            <li><i class="fas fa-wallet"></i> Down Payment: <b>৳${item.downPayment}</b></li>
+                            <li><i class="fas fa-info-circle"></i> ${item.desc.substring(0, 60)}${item.desc.length > 60 ? '...' : ''}</li>
+                        </ul>
+
+                        <button class="buy-btn" onclick="openTelegram('${item.title}', ${finalPrice}, ${item.downPayment}, '${productTelegramUser}')">
+                            <i class="fab fa-telegram-plane"></i> Buy Now
+                        </button>
+                    </div>
+                </div>
+            `;
+            productList.innerHTML += html;
+        });
+
+        // If all items were unpublished
+        if(productList.innerHTML === '') {
+            productList.innerHTML = '<div style="text-align:center; width:100%; color:#666; font-size:1.2rem;">Coming Soon...</div>';
+        }
+    });
+
+    // Function to change main image on thumbnail click
+    window.changeImage = function(elm, id) {
+        const mainImg = document.getElementById(`main-${id}`);
+        mainImg.style.opacity = '0.5'; // Fade effect
+        setTimeout(() => {
+            mainImg.src = elm.src;
+            mainImg.style.opacity = '1';
+        }, 200);
+
+        // Highlight active thumb
+        elm.parentElement.querySelectorAll('.thumb').forEach(t => t.style.borderColor = 'transparent');
+        elm.style.borderColor = '#00f2ff';
+    }
+
+    // Function to handle Telegram Buy
+    window.openTelegram = function(title, price, advance, tgUser) {
+        const msg = `Hello! I am interested in buying this website:%0A%0A` +
+                    `🖥️ *Website Name:* ${title}%0A` +
+                    `💰 *Final Price:* ${price} Tk%0A` +
+                    `💳 *Down Payment:* ${advance} Tk%0A%0A` +
+                    `Please send me payment details via Bkash/Nagad.`;
+        
+        // Remove @ if user accidentally added it in admin panel
+        const cleanUser = tgUser.replace('@', '');
+        
+        const url = `https://t.me/${cleanUser}?text=${msg}`;
+        window.open(url, '_blank');
+    }
+</script>
+
 </body>
 </html>
